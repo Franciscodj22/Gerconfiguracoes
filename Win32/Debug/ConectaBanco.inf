@@ -1,0 +1,8 @@
+DriverID=MySQL
+Server=127.0.0.1
+database=pdv
+User_Name=root
+Password=1234567890
+CharacterSet=utf8_general_ci
+Port=
+UseSSL=
