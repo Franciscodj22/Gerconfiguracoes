@@ -7,9 +7,11 @@ uses
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.ExtCtrls, Vcl.ComCtrls, inifiles, printers,
   Vcl.Buttons, FireDAC.Stan.Intf, FireDAC.Stan.Option, FireDAC.Stan.Error,
   FireDAC.UI.Intf, FireDAC.Phys.Intf, FireDAC.Stan.Def, FireDAC.Stan.Pool,
-  FireDAC.Stan.Async, FireDAC.Phys, FireDAC.VCLUI.Wait, Data.DB,
+  FireDAC.Stan.Async, FireDAC.Phys, FireDAC.VCLUI.Wait, Data.DB, FireDAC.Dapt,
   FireDAC.Comp.Client, FireDAC.Phys.MySQLDef, FireDAC.Phys.MySQL,
-  FireDAC.Phys.FBDef, FireDAC.Phys.IBBase, FireDAC.Phys.FB;
+  FireDAC.Phys.FBDef, FireDAC.Phys.IBBase, FireDAC.Phys.FB, FireDAC.Stan.Param,
+  FireDAC.DatS, FireDAC.DApt.Intf, FireDAC.Comp.DataSet, Vcl.Grids, Vcl.DBGrids,
+  Vcl.DBCtrls;
 
 type
   TForm3 = class(TForm)
@@ -32,8 +34,6 @@ type
     Label3: TLabel;
     CbxUsaTEF: TComboBox;
     Label4: TLabel;
-    LbeIniTEF: TLabeledEdit;
-    LbeCaminhoTEF: TLabeledEdit;
     TabSheet5: TTabSheet;
     GroupBox3: TGroupBox;
     LbeRetornoAcbr: TLabeledEdit;
@@ -55,6 +55,19 @@ type
     LbFechar: TLabel;
     GroupBox4: TGroupBox;
     BtnTestaConexao: TSpeedButton;
+    DataSource1: TDataSource;
+    SpeedButton1: TSpeedButton;
+    DBGrid1: TDBGrid;
+    QrListaEmpresas: TFDQuery;
+    GroupBox5: TGroupBox;
+    LbeCaminhoTEF: TLabeledEdit;
+    LbeIniTEF: TLabeledEdit;
+    GroupBox6: TGroupBox;
+    RgTipoTEF: TRadioGroup;
+    LbeIpServCliSiTEF: TLabeledEdit;
+    LbeCodigoLojaCliSiTEF: TLabeledEdit;
+    LbeNTerminalCliSiTEF: TLabeledEdit;
+    Label5: TLabel;
     procedure FormCreate(Sender: TObject);
     procedure CarregaConectaBanco;
     procedure CarregainiNFE;
@@ -65,9 +78,18 @@ type
     procedure SalvaConexaoBanco;
     procedure BtnOKClick(Sender: TObject);
     procedure SalvariniNFE;
+    procedure Panel1MouseDown(Sender: TObject; Button: TMouseButton;
+      Shift: TShiftState; X, Y: Integer);
+    procedure LbFecharClick(Sender: TObject);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure CarregarEmpresa(idEmpresaSelecionada : integer);
+    procedure SpeedButton1Click(Sender: TObject);
+    procedure DBGrid1CellClick(Column: TColumn);
+    procedure CarregainiCliSITEF;
+    procedure SalvarIniCliSiTEF;
   private
     { Private declarations }
-    iniApp,iniNFe : TIniFile;
+    iniApp,iniNFe, SitefINi : TIniFile;
     ConectaBanco : TStringList;
   public
     { Public declarations }
@@ -92,6 +114,7 @@ procedure TForm3.BtnOKClick(Sender: TObject);
 begin
 SalvaConexaoBanco;
 SalvariniNFE;
+SalvarIniCliSiTEF;
 application.MessageBox('configurações salvas com Suscesso!','configurações',64);
 end;
 
@@ -132,6 +155,13 @@ CbxSSL.Text := ConectaBanco.Values['UseSSL'];
 
 end;
 
+procedure TForm3.CarregainiCliSITEF;
+begin
+    LbeIpServCliSiTEF.Text := sitefini.ReadString('PDV','ipServTEF','');
+LbeCodigoLojaCliSiTEF.Text := sitefini.ReadString('PDV','CodigoLoja','');
+ LbeNTerminalCliSiTEF.Text := sitefini.ReadString('PDV','numTerminal','');
+end;
+
 procedure TForm3.CarregainiNFE;
 begin
 //CbxUsaTEF.ItemIndex :=-1;
@@ -147,7 +177,41 @@ LbeSolicitaAcbr.Text := iniNFe.ReadString('root', 'saida', '');
 LbeRetornoAcbr.Text :=iniNFe.ReadString('root', 'Retorno', '');
 CbxImpressora.ItemIndex := CbxImpressora.Items.IndexOf(iniNFe.ReadString('impressao','impressora',''));
  ChbxUsarBalansa.Checked := iniNFE.ReadInteger('Balanca', 'UsarBalConectada', 0)=1;
+ ChbxPrevisualizaimpressao.Checked := iniNFe.ReadInteger('impressao','Previsualizar',0) = 1;
+ CbxUsaTEF.ItemIndex := ininfe.ReadInteger('venda','usarTEF',0);
+ RgTipoTEF.ItemIndex := ininfe.ReadInteger('Ajustes_TEF', 'CliSiTEF', 0);
 
+end;
+
+procedure TForm3.CarregarEmpresa(idEmpresaSelecionada: integer);
+begin
+DBGrid1.DataSource := DataSource1;
+DBGrid1.DataSource.DataSet := QrListaEmpresas;
+
+try
+FDCon.Connected:= false;
+FDCon.Params.Clear;
+FDCon.Params.Text :=
+'DriverID='+CbxDriverBanco.Text +#13+
+'Server='+LbeServidor.Text+#13+
+'database='+ LbeBanco.Text+#13+
+'User_Name='+LbUsuario.Text+#13+
+'Password='+LbSenha.Text+#13+
+'CharacterSet='+ cbxCharacter.Text+#13+
+'Port='+LbePorta.Text+#13+
+'UseSSL='+CbxSSL.Text;
+QrListaEmpresas.Open('select id, razao_social, cnpj from nfe_empresa');
+ {
+DBGrid1.Columns[0].Field := mt.FieldByName('id');
+DBGrid1.Columns[1].Field := mt.FieldByName('razao_social'); }
+
+//showmessage(QrListaEmpresas.FieldByName('razao_social').AsString);
+QrListaEmpresas.Locate('id',inttostr(idEmpresaSelecionada),[]);
+
+except
+on e:exception do
+raise exception.Create('não foi possivel listar as empresas'+#13+e.message);
+end;
 end;
 
 procedure TForm3.CarregarImpressoras;
@@ -162,17 +226,35 @@ begin
 
 end;
 
+procedure TForm3.DBGrid1CellClick(Column: TColumn);
+begin
+if QrListaEmpresas.RecordCount>0 then
+ iniNFe.WriteInteger('EmpresaEmitente','id',QrListaEmpresas.FieldByName('id').AsInteger)
+
+end;
+
+procedure TForm3.FormClose(Sender: TObject; var Action: TCloseAction);
+begin
+action := cafree;
+form3 := nil;
+end;
+
 procedure TForm3.FormCreate(Sender: TObject);
 begin
+PageControl1.TabIndex := 0;
  iniApp := TInifile.Create(extractfilepath(application.ExeName)+'config.ini');
  iniNFe := TInifile.Create(extractfilepath(application.ExeName)+'configNFE.ini');
+ SitefINi := TIniFile.Create(extractfilepath(paramstr(0))+'CliSiTEF.ini');
 
  ConectaBanco :=TStringList.Create;
  ConectaBanco.LoadFromFile(extractfilepath(application.ExeName)+'Conectabanco.inf');
     CarregarImpressoras;
- CarregaConectaBanco;
- CarregainiNFE;
+    CarregaConectaBanco;
+    CarregainiNFE;
+    CarregainiCliSITEF;
 
+ if iniNFe.ReadString('EmpresaEmitente','id','')='' then
+ iniNFe.WriteString('EmpresaEmitente','id','1');
 
 end;
 
@@ -180,6 +262,20 @@ procedure TForm3.LbePortaKeyPress(Sender: TObject; var Key: Char);
 begin
 if not (key in['0'..'9',#13,#8]) then  Key:= #0;
 
+end;
+
+procedure TForm3.LbFecharClick(Sender: TObject);
+begin
+self.Close;
+end;
+
+procedure TForm3.Panel1MouseDown(Sender: TObject; Button: TMouseButton;
+  Shift: TShiftState; X, Y: Integer);
+begin
+ ReleaseCapture;
+
+  { Move o panel }
+  PostMessage(self.Handle, WM_SYSCOMMAND, $F012, 0);
 end;
 
 procedure TForm3.SalvaConexaoBanco;
@@ -196,6 +292,13 @@ ConectaBanco.Text :=
  ConectaBanco.SaveToFile(ExtractFilePath(application.ExeName)+'Conectabanco.inf');
 end;
 
+procedure TForm3.SalvarIniCliSiTEF;
+begin
+      sitefini.WriteString('PDV','ipServTEF',LbeIpServCliSiTEF.Text);
+      sitefini.WriteString('PDV','CodigoLoja',LbeCodigoLojaCliSiTEF.Text);
+      sitefini.WriteString('PDV','numTerminal',LbeNTerminalCliSiTEF.Text);
+end;
+
 procedure TForm3.SalvariniNFE;
 begin
 ininfe.WriteInteger('venda','usarTEF',CbxUsaTEF.ItemIndex);
@@ -206,9 +309,15 @@ ininfe.WriteInteger('venda','usarTEF',CbxUsaTEF.ItemIndex);
 
  iniNFe.WriteString('root', 'saida', LbeSolicitaAcbr.Text);
  iniNFe.WriteString('root', 'Retorno', LbeRetornoAcbr.Text);
- iniNFe.WriteString('rooimpressaot','impressora',CbxImpressora.text);
+ iniNFe.WriteString('impressao','impressora',CbxImpressora.text);
  iniNFE.WriteInteger('Balanca', 'UsarBalConectada', integer(ChbxUsarBalansa.Checked));
+ iniNFe.WriteInteger('impressao','Previsualizar',integer(ChbxPrevisualizaimpressao.Checked));
 
+end;
+
+procedure TForm3.SpeedButton1Click(Sender: TObject);
+begin
+CarregarEmpresa(iniNFe.Readinteger('EmpresaEmitente','id',1));
 end;
 
 end.

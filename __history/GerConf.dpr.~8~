@@ -19,9 +19,9 @@ uses
   uConf in 'units\uConf.pas' {Form3};
 
 {$R *.res}
-procedure AbrirConfiguracao(aHandle : THandle);
+procedure AbrirConfiguracao(applicacao : tApplication);
 begin
-application.Handle := aHandle ;
+application.Handle := applicacao.Handle ;
 //showmessage('oi'); exit;
   if form3 = nil then
   Application.CreateForm(TForm3, Form3);

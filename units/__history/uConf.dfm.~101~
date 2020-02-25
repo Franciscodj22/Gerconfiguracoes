@@ -13,6 +13,7 @@ object Form3: TForm3
   Font.Style = []
   OldCreateOrder = False
   Position = poMainFormCenter
+  OnClose = FormClose
   OnCreate = FormCreate
   PixelsPerInch = 96
   TextHeight = 19
@@ -161,9 +162,9 @@ object Form3: TForm3
   object PageControl1: TPageControl
     Left = 1
     Top = 32
-    Width = 710
+    Width = 707
     Height = 381
-    ActivePage = TabSheet1
+    ActivePage = TabSheet2
     DoubleBuffered = False
     ParentDoubleBuffered = False
     TabOrder = 0
@@ -362,15 +363,15 @@ object Form3: TForm3
       Caption = 'TEF'
       ImageIndex = 1
       object Label4: TLabel
-        Left = 18
+        Left = 67
         Top = 24
         Width = 70
         Height = 19
         Caption = 'Usar TEF:'
       end
       object CbxUsaTEF: TComboBox
-        Left = 18
-        Top = 49
+        Left = 143
+        Top = 21
         Width = 100
         Height = 27
         Style = csDropDownList
@@ -379,29 +380,105 @@ object Form3: TForm3
           'N'#227'o'
           'Sim')
       end
-      object LbeIniTEF: TLabeledEdit
-        Left = 18
-        Top = 110
-        Width = 311
-        Height = 27
-        Hint = 'Arquivoini TEF.ini'
-        EditLabel.Width = 57
-        EditLabel.Height = 19
-        EditLabel.Caption = 'Ini TEF:'
+      object GroupBox5: TGroupBox
+        Left = -5
+        Top = 64
+        Width = 343
+        Height = 273
+        Caption = 'TEF_DIAL'
         TabOrder = 1
-        TextHint = 'ex: c:\Venda\iniTef.ini'
+        object LbeCaminhoTEF: TLabeledEdit
+          Left = 10
+          Top = 123
+          Width = 311
+          Height = 27
+          Hint = 'Diret'#243'rio TEF'
+          EditLabel.Width = 101
+          EditLabel.Height = 19
+          EditLabel.Caption = 'Caminho TEF:'
+          TabOrder = 0
+          TextHint = 'ex : c:\FacilPDV\'
+          Visible = False
+        end
+        object LbeIniTEF: TLabeledEdit
+          Left = 10
+          Top = 59
+          Width = 311
+          Height = 27
+          Hint = 'Arquivoini TEF.ini'
+          EditLabel.Width = 57
+          EditLabel.Height = 19
+          EditLabel.Caption = 'Ini TEF:'
+          TabOrder = 1
+          TextHint = 'ex: c:\Venda\iniTef.ini'
+          Visible = False
+        end
       end
-      object LbeCaminhoTEF: TLabeledEdit
-        Left = 18
-        Top = 174
+      object GroupBox6: TGroupBox
+        Left = 344
+        Top = 64
         Width = 311
-        Height = 27
-        Hint = 'Diret'#243'rio TEF'
-        EditLabel.Width = 101
-        EditLabel.Height = 19
-        EditLabel.Caption = 'Caminho TEF:'
+        Height = 273
+        Caption = 'CliSiTEF'
         TabOrder = 2
-        TextHint = 'ex : c:\FacilPDV\'
+        object LbeIpServCliSiTEF: TLabeledEdit
+          Left = 16
+          Top = 59
+          Width = 263
+          Height = 27
+          Hint = 'Arquivoini TEF.ini'
+          EditLabel.Width = 111
+          EditLabel.Height = 19
+          EditLabel.Caption = 'IP Servidor TEF'
+          TabOrder = 0
+        end
+        object LbeCodigoLojaCliSiTEF: TLabeledEdit
+          Left = 16
+          Top = 123
+          Width = 263
+          Height = 27
+          Hint = 'Arquivoini TEF.ini'
+          EditLabel.Width = 85
+          EditLabel.Height = 19
+          EditLabel.Caption = 'C'#243'digo Loja'
+          TabOrder = 1
+        end
+        object LbeNTerminalCliSiTEF: TLabeledEdit
+          Left = 16
+          Top = 188
+          Width = 263
+          Height = 27
+          Hint = 'Arquivoini TEF.ini'
+          EditLabel.Width = 125
+          EditLabel.Height = 19
+          EditLabel.Caption = 'Numero Terminal'
+          TabOrder = 2
+        end
+        object LabeledEdit3: TLabeledEdit
+          Left = 16
+          Top = 239
+          Width = 105
+          Height = 27
+          Hint = 'Arquivoini TEF.ini'
+          CharCase = ecUpperCase
+          EditLabel.Width = 90
+          EditLabel.Height = 19
+          EditLabel.Caption = 'Porta Pinpad'
+          TabOrder = 3
+          TextHint = 'ex: COM1'
+        end
+      end
+      object RgTipoTEF: TRadioGroup
+        Left = 344
+        Top = 3
+        Width = 311
+        Height = 45
+        Caption = 'Tipo de TEF'
+        Columns = 2
+        Items.Strings = (
+          'TEF_DIAL'
+          'CliSiTEF')
+        TabOrder = 3
       end
     end
     object TabSheet4: TTabSheet
@@ -423,6 +500,7 @@ object Form3: TForm3
           EditLabel.Height = 19
           EditLabel.Caption = 'LabeledEdit1'
           TabOrder = 0
+          Visible = False
         end
         object CbxImpressora: TComboBox
           Left = 16
@@ -456,6 +534,7 @@ object Form3: TForm3
           EditLabel.Height = 19
           EditLabel.Caption = 'LabeledEdit1'
           TabOrder = 0
+          Visible = False
         end
         object ChbxUsarBalansa: TCheckBox
           Left = 24
@@ -470,10 +549,25 @@ object Form3: TForm3
     object TabSheet5: TTabSheet
       Caption = 'Terminal'
       ImageIndex = 4
+      object SpeedButton1: TSpeedButton
+        Left = 159
+        Top = 176
+        Width = 74
+        Height = 26
+        Caption = 'Atualiza'
+        OnClick = SpeedButton1Click
+      end
+      object Label5: TLabel
+        Left = 8
+        Top = 179
+        Width = 134
+        Height = 19
+        Caption = 'Empresa Emitente:'
+      end
       object GroupBox3: TGroupBox
         Left = 0
         Top = 3
-        Width = 465
+        Width = 442
         Height = 142
         Caption = 'Comunica'#231#227'o Acbrmonitor:'
         TabOrder = 0
@@ -485,7 +579,9 @@ object Form3: TForm3
           EditLabel.Width = 114
           EditLabel.Height = 19
           EditLabel.Caption = 'Resposta ACBR:'
+          Enabled = False
           TabOrder = 0
+          Text = 'C:\AcbrmonitorPlus\Resp.txt'
         end
         object LbeSolicitaAcbr: TLabeledEdit
           Left = 18
@@ -495,12 +591,14 @@ object Form3: TForm3
           EditLabel.Width = 125
           EditLabel.Height = 19
           EditLabel.Caption = 'Solicita'#231#227'o ACBR:'
+          Enabled = False
           TabOrder = 1
+          Text = 'c:\AcbrMonitorPlus\Req.txt'
         end
       end
       object LbeUltimaNota: TLabeledEdit
-        Left = 18
-        Top = 245
+        Left = 498
+        Top = 85
         Width = 119
         Height = 27
         EditLabel.Width = 90
@@ -510,8 +608,8 @@ object Form3: TForm3
         OnKeyPress = LbePortaKeyPress
       end
       object LbeTerminal: TLabeledEdit
-        Left = 18
-        Top = 173
+        Left = 498
+        Top = 27
         Width = 119
         Height = 27
         EditLabel.Width = 110
@@ -519,6 +617,21 @@ object Form3: TForm3
         EditLabel.Caption = 'Serie/Terminal:'
         TabOrder = 2
         OnKeyPress = LbePortaKeyPress
+      end
+      object DBGrid1: TDBGrid
+        Left = 3
+        Top = 208
+        Width = 672
+        Height = 97
+        DataSource = DataSource1
+        Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgAlwaysShowSelection, dgConfirmDelete, dgCancelOnExit, dgTitleClick, dgTitleHotTrack]
+        TabOrder = 3
+        TitleFont.Charset = DEFAULT_CHARSET
+        TitleFont.Color = clWindowText
+        TitleFont.Height = -16
+        TitleFont.Name = 'Tahoma'
+        TitleFont.Style = []
+        OnCellClick = DBGrid1CellClick
       end
     end
   end
@@ -532,6 +645,7 @@ object Form3: TForm3
     Color = clInactiveCaption
     ParentBackground = False
     TabOrder = 1
+    OnMouseDown = Panel1MouseDown
     object LbFechar: TLabel
       Left = 666
       Top = -8
@@ -545,6 +659,7 @@ object Form3: TForm3
       Font.Name = 'Tahoma'
       Font.Style = []
       ParentFont = False
+      OnClick = LbFecharClick
     end
   end
   object FDCon: TFDConnection
@@ -554,7 +669,7 @@ object Form3: TForm3
       'User_Name=sysdba'
       'Password=masterkey')
     LoginPrompt = False
-    Left = 380
+    Left = 332
     Top = 220
   end
   object FDPhysMySQLDriverLink1: TFDPhysMySQLDriverLink
@@ -567,5 +682,14 @@ object Form3: TForm3
     VendorLib = 'fbclient.dll'
     Left = 348
     Top = 284
+  end
+  object DataSource1: TDataSource
+    Left = 533
+    Top = 286
+  end
+  object QrListaEmpresas: TFDQuery
+    Connection = FDCon
+    Left = 264
+    Top = 256
   end
 end
