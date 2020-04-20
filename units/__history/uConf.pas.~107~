@@ -67,6 +67,12 @@ type
     LbeIpServCliSiTEF: TLabeledEdit;
     LbeCodigoLojaCliSiTEF: TLabeledEdit;
     LbeNTerminalCliSiTEF: TLabeledEdit;
+    Label5: TLabel;
+    LbPortaPinPad: TLabeledEdit;
+    GroupBox7: TGroupBox;
+    LabeledEdit3: TLabeledEdit;
+    ComboBox1: TComboBox;
+    CheckBox1: TCheckBox;
     procedure FormCreate(Sender: TObject);
     procedure CarregaConectaBanco;
     procedure CarregainiNFE;
@@ -156,6 +162,7 @@ end;
 
 procedure TForm3.CarregainiCliSITEF;
 begin
+        LbPortaPinPad.Text := sitefini.ReadString('PinPadCompartilhado','Porta','');
     LbeIpServCliSiTEF.Text := sitefini.ReadString('PDV','ipServTEF','');
 LbeCodigoLojaCliSiTEF.Text := sitefini.ReadString('PDV','CodigoLoja','');
  LbeNTerminalCliSiTEF.Text := sitefini.ReadString('PDV','numTerminal','');
@@ -296,6 +303,7 @@ begin
       sitefini.WriteString('PDV','ipServTEF',LbeIpServCliSiTEF.Text);
       sitefini.WriteString('PDV','CodigoLoja',LbeCodigoLojaCliSiTEF.Text);
       sitefini.WriteString('PDV','numTerminal',LbeNTerminalCliSiTEF.Text);
+      sitefini.WriteString('PinPadCompartilhado','Porta',LbPortaPinPad.Text);
 end;
 
 procedure TForm3.SalvariniNFE;
@@ -311,6 +319,7 @@ ininfe.WriteInteger('venda','usarTEF',CbxUsaTEF.ItemIndex);
  iniNFe.WriteString('impressao','impressora',CbxImpressora.text);
  iniNFE.WriteInteger('Balanca', 'UsarBalConectada', integer(ChbxUsarBalansa.Checked));
  iniNFe.WriteInteger('impressao','Previsualizar',integer(ChbxPrevisualizaimpressao.Checked));
+ ininfe.WriteInteger('Ajustes_TEF', 'CliSiTEF', RgTipoTEF.ItemIndex);
 
 end;
 

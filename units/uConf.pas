@@ -69,6 +69,9 @@ type
     LbeNTerminalCliSiTEF: TLabeledEdit;
     Label5: TLabel;
     LbPortaPinPad: TLabeledEdit;
+    GroupBox7: TGroupBox;
+    lbePortaImpEtiqueta: TLabeledEdit;
+    CbxLinguagemImpEtiqueta: TComboBox;
     procedure FormCreate(Sender: TObject);
     procedure CarregaConectaBanco;
     procedure CarregainiNFE;
@@ -182,6 +185,8 @@ CbxImpressora.ItemIndex := CbxImpressora.Items.IndexOf(iniNFe.ReadString('impres
  ChbxPrevisualizaimpressao.Checked := iniNFe.ReadInteger('impressao','Previsualizar',0) = 1;
  CbxUsaTEF.ItemIndex := ininfe.ReadInteger('venda','usarTEF',0);
  RgTipoTEF.ItemIndex := ininfe.ReadInteger('Ajustes_TEF', 'CliSiTEF', 0);
+ CbxLinguagemImpEtiqueta.ItemIndex := CbxLinguagemImpEtiqueta.Items.IndexOf(ininfe.ReadString('impressao','TipoImpEtiqueta',''));
+lbePortaImpEtiqueta.Text := ininfe.ReadString('impressao','PortaImpEtiqueta','');
 
 end;
 
@@ -316,6 +321,8 @@ ininfe.WriteInteger('venda','usarTEF',CbxUsaTEF.ItemIndex);
  iniNFE.WriteInteger('Balanca', 'UsarBalConectada', integer(ChbxUsarBalansa.Checked));
  iniNFe.WriteInteger('impressao','Previsualizar',integer(ChbxPrevisualizaimpressao.Checked));
  ininfe.WriteInteger('Ajustes_TEF', 'CliSiTEF', RgTipoTEF.ItemIndex);
+ ininfe.WriteString('impressao','TipoImpEtiqueta',CbxLinguagemImpEtiqueta.Text);//
+ ininfe.WriteString('impressao','PortaImpEtiqueta',lbePortaImpEtiqueta.Text);
 
 end;
 

@@ -164,7 +164,7 @@ object Form3: TForm3
     Top = 32
     Width = 707
     Height = 381
-    ActivePage = TabSheet1
+    ActivePage = TabSheet4
     DoubleBuffered = False
     ParentDoubleBuffered = False
     TabOrder = 0
@@ -489,7 +489,7 @@ object Form3: TForm3
         Top = 24
         Width = 558
         Height = 89
-        Caption = 'Impressao'
+        Caption = 'Impressao Fiscal e N'#227'o-Fiscal'
         TabOrder = 0
         object LabeledEdit1: TLabeledEdit
           Left = 456
@@ -520,7 +520,7 @@ object Form3: TForm3
       end
       object GroupBox1: TGroupBox
         Left = 3
-        Top = 136
+        Top = 240
         Width = 558
         Height = 89
         Caption = 'Usar Balanca conectada'
@@ -543,6 +543,37 @@ object Form3: TForm3
           Height = 16
           Caption = 'Usar Balanca'
           TabOrder = 1
+        end
+      end
+      object GroupBox7: TGroupBox
+        Left = 0
+        Top = 119
+        Width = 558
+        Height = 89
+        Caption = 'Impressora de Etiqueta'
+        TabOrder = 2
+        object lbePortaImpEtiqueta: TLabeledEdit
+          Left = 208
+          Top = 43
+          Width = 97
+          Height = 27
+          EditLabel.Width = 43
+          EditLabel.Height = 19
+          EditLabel.Caption = 'Porta:'
+          TabOrder = 0
+        end
+        object CbxLinguagemImpEtiqueta: TComboBox
+          Left = 16
+          Top = 40
+          Width = 97
+          Height = 27
+          ItemIndex = 2
+          TabOrder = 1
+          Text = 'BPLB'
+          Items.Strings = (
+            'Nenhuma'
+            'PPLA'
+            'BPLB')
         end
       end
     end

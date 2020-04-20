@@ -67,6 +67,8 @@ type
     LbeIpServCliSiTEF: TLabeledEdit;
     LbeCodigoLojaCliSiTEF: TLabeledEdit;
     LbeNTerminalCliSiTEF: TLabeledEdit;
+    Label5: TLabel;
+    LbPortaPinPad: TLabeledEdit;
     procedure FormCreate(Sender: TObject);
     procedure CarregaConectaBanco;
     procedure CarregainiNFE;
@@ -113,6 +115,7 @@ procedure TForm3.BtnOKClick(Sender: TObject);
 begin
 SalvaConexaoBanco;
 SalvariniNFE;
+SalvarIniCliSiTEF;
 application.MessageBox('configurações salvas com Suscesso!','configurações',64);
 end;
 
@@ -155,6 +158,7 @@ end;
 
 procedure TForm3.CarregainiCliSITEF;
 begin
+        LbPortaPinPad.Text := sitefini.ReadString('PinPadCompartilhado','Porta','');
     LbeIpServCliSiTEF.Text := sitefini.ReadString('PDV','ipServTEF','');
 LbeCodigoLojaCliSiTEF.Text := sitefini.ReadString('PDV','CodigoLoja','');
  LbeNTerminalCliSiTEF.Text := sitefini.ReadString('PDV','numTerminal','');
@@ -247,8 +251,9 @@ PageControl1.TabIndex := 0;
  ConectaBanco :=TStringList.Create;
  ConectaBanco.LoadFromFile(extractfilepath(application.ExeName)+'Conectabanco.inf');
     CarregarImpressoras;
- CarregaConectaBanco;
- CarregainiNFE;
+    CarregaConectaBanco;
+    CarregainiNFE;
+    CarregainiCliSITEF;
 
  if iniNFe.ReadString('EmpresaEmitente','id','')='' then
  iniNFe.WriteString('EmpresaEmitente','id','1');
@@ -294,6 +299,7 @@ begin
       sitefini.WriteString('PDV','ipServTEF',LbeIpServCliSiTEF.Text);
       sitefini.WriteString('PDV','CodigoLoja',LbeCodigoLojaCliSiTEF.Text);
       sitefini.WriteString('PDV','numTerminal',LbeNTerminalCliSiTEF.Text);
+      sitefini.WriteString('PinPadCompartilhado','Porta',LbPortaPinPad.Text);
 end;
 
 procedure TForm3.SalvariniNFE;
@@ -309,6 +315,7 @@ ininfe.WriteInteger('venda','usarTEF',CbxUsaTEF.ItemIndex);
  iniNFe.WriteString('impressao','impressora',CbxImpressora.text);
  iniNFE.WriteInteger('Balanca', 'UsarBalConectada', integer(ChbxUsarBalansa.Checked));
  iniNFe.WriteInteger('impressao','Previsualizar',integer(ChbxPrevisualizaimpressao.Checked));
+ ininfe.WriteInteger('Ajustes_TEF', 'CliSiTEF', RgTipoTEF.ItemIndex);
 
 end;
 
